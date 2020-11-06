@@ -47,12 +47,12 @@ _URL = "http://www.openslr.org/12"
 _DL_URL = "http://www.openslr.org/resources/12/"
 _DL_URLS = {
     "dev_clean": _DL_URL + "dev-clean.tar.gz",
-    "dev_other": _DL_URL + "dev-other.tar.gz",
-    "test_clean": _DL_URL + "test-clean.tar.gz",
-    "test_other": _DL_URL + "test-other.tar.gz",
-    "train_clean100": _DL_URL + "train-clean-100.tar.gz",
-    "train_clean360": _DL_URL + "train-clean-360.tar.gz",
-    "train_other500": _DL_URL + "train-other-500.tar.gz",
+#    "dev_other": _DL_URL + "dev-other.tar.gz",
+#    "test_clean": _DL_URL + "test-clean.tar.gz",
+#    "test_other": _DL_URL + "test-other.tar.gz",
+#    "train_clean100": _DL_URL + "train-clean-100.tar.gz",
+#    "train_clean360": _DL_URL + "train-clean-360.tar.gz",
+#    "train_other500": _DL_URL + "train-other-500.tar.gz",
 }
 
 
@@ -115,7 +115,7 @@ def _make_builder_configs():
   return configs
 
 
-class Librispeech(tfds.core.BeamBasedBuilder):
+class Librispeech(tfds.core.GeneratorBasedBuilder):
   """Librispeech dataset."""
 
   BUILDER_CONFIGS = _make_builder_configs()
@@ -185,15 +185,10 @@ class Librispeech(tfds.core.BeamBasedBuilder):
               for k, v in extracted_dirs.items()]
     return splits
 
-  def _build_pcollection(self, pipeline, directory):
-    """Generates examples as dicts."""
-    beam = tfds.core.lazy_imports.apache_beam
-    return (pipeline
-            | beam.Create([directory])
-            | beam.FlatMap(_generate_librispeech_examples)
-            | beam.Reshuffle())
-
-
+  def _generate_examples(self, directory):
+    for key, example in _generate_librispeech_examples(directory):
+      yield key, example
+  
 def _generate_librispeech_examples(directory):
   """Generate examples from a Librispeech directory."""
   transcripts_glob = os.path.join(directory, "LibriSpeech", "*/*/*/*.txt")
