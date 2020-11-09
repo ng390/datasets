@@ -51,8 +51,8 @@ _DL_URLS = {
     "test_clean": _DL_URL + "test-clean.tar.gz",
     "test_other": _DL_URL + "test-other.tar.gz",
     "train_clean100": _DL_URL + "train-clean-100.tar.gz",
-#    "train_clean360": _DL_URL + "train-clean-360.tar.gz",
-#    "train_other500": _DL_URL + "train-other-500.tar.gz",
+    "train_clean360": _DL_URL + "train-clean-360.tar.gz",
+    "train_other500": _DL_URL + "train-other-500.tar.gz",
 }
 
 
